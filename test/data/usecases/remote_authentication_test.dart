@@ -1,7 +1,12 @@
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:for_dev/domain/usecases/authentication.dart';
 import 'package:mockito/mockito.dart';
+
+import 'package:for_dev/data/http/http.dart';
+import 'package:for_dev/data/usecases/usecases.dart';
+import 'package:for_dev/domain/usecases/usecases.dart';
+
+class HttpClientSpy extends Mock implements HttpClient {}
 
 void main() {
   late RemoteAuthentication sut;
@@ -16,7 +21,7 @@ void main() {
 
   test(
     'Should call HttpClient with correct values',
-        () async {
+    () async {
       final params = AuthenticationParams(
         email: faker.internet.email(),
         secret: faker.internet.password(),
@@ -36,33 +41,4 @@ void main() {
       );
     },
   );
-}
-
-abstract class HttpClient {
-  Future<void>? request({
-    required String url,
-    required String method,
-    required Map body,
-  });
-}
-
-class HttpClientSpy extends Mock implements HttpClient {}
-
-class RemoteAuthentication {
-  final HttpClient httpClient;
-  final String url;
-
-  RemoteAuthentication({
-    required this.httpClient,
-    required this.url,
-  });
-
-  Future<void> auth(AuthenticationParams params) async {
-    final body = {
-      'email': params.email,
-      'password': params.secret,
-    };
-    
-    await httpClient.request(url: url, method: 'post', body: body);
-  }
 }
