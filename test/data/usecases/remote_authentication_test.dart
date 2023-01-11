@@ -21,6 +21,7 @@ void main() {
     httpClient = MockHttpClient();
     url = faker.internet.httpUrl();
     sut = RemoteAuthentication(httpClient: httpClient, url: url);
+
     params = AuthenticationParams(
       email: faker.internet.email(),
       secret: faker.internet.password(),
@@ -92,6 +93,30 @@ void main() {
       final future = sut.auth(params);
 
       expect(future, throwsA(DomainError.invalidCredentials));
+    },
+  );
+
+  test(
+    'Should returns an Account if HttpClient returns 200',
+    () async {
+      final accessToken = faker.guid.guid();
+
+      when(
+        httpClient.request(
+          body: anyNamed('body'),
+          method: anyNamed('method'),
+          url: anyNamed('url'),
+        ),
+      ).thenAnswer(
+        (_) async => {
+          'accessToken': accessToken,
+          'name': faker.person.name(),
+        },
+      );
+
+      final account = await sut.auth(params);
+
+      expect(account.token, accessToken);
     },
   );
 }
