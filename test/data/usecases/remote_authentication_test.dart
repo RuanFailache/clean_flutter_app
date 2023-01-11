@@ -100,7 +100,7 @@ void main() {
 
       final account = await sut.auth(params);
 
-      expect(account.accessToken, accessToken);
+      expect(account.token, accessToken);
     },
   );
 
