@@ -20,34 +20,62 @@ void main() {
     url = faker.internet.httpUrl();
   });
 
-  test(
-    'Should call post with correct values',
-    () async {
-      final uri = HttpAdapter.convertUrlToHttpUri(url);
+  group('post', () {
+    PostExpectation mockPostRequest() => when(
+          client.post(
+            any,
+            body: anyNamed('body'),
+            headers: anyNamed('headers'),
+          ),
+        );
 
-      when(
-        client.post(
-          any,
-          body: anyNamed('body'),
-          headers: anyNamed('headers'),
-        ),
-      ).thenAnswer(
-        (_) async => Response('{}', 201),
-      );
+    test(
+      'Should call post with body',
+      () async {
+        final uri = HttpAdapter.convertUrlToHttpUri(url);
 
-      await sut.request(url: url, method: 'post');
+        mockPostRequest().thenAnswer((_) async => Response('{}', 201));
 
-      verify(
-        client.post(
-          uri,
-          headers: {
-            'content-type': 'application/json',
-            'accept': 'application/json',
-          },
-        ),
-      );
-    },
-  );
+        await sut.request(
+          url: url,
+          method: 'post',
+          body: {'any_key': 'anY_value'},
+        );
+
+        verify(
+          client.post(
+            uri,
+            body: '{"any_key":"anY_value"}',
+            headers: {
+              'content-type': 'application/json',
+              'accept': 'application/json',
+            },
+          ),
+        );
+      },
+    );
+
+    test(
+      'Should call post without body',
+      () async {
+        final uri = HttpAdapter.convertUrlToHttpUri(url);
+
+        mockPostRequest().thenAnswer((_) async => Response('{}', 201));
+
+        await sut.request(url: url, method: 'post');
+
+        verify(
+          client.post(
+            uri,
+            headers: {
+              'content-type': 'application/json',
+              'accept': 'application/json',
+            },
+          ),
+        );
+      },
+    );
+  });
 }
 
 class HttpAdapter {
