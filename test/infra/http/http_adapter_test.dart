@@ -14,91 +14,66 @@ void main() {
   late HttpAdapter sut;
   late MockClient client;
   late String url;
+  late Uri uri;
 
   setUp(() {
     client = MockClient();
     sut = HttpAdapter(client);
     url = faker.internet.httpUrl();
+    uri = HttpAdapter.convertUrlToHttpUri(url);
   });
 
   group('post', () {
-    PostExpectation mockPostRequest() => when(
-          client.post(
-            any,
-            body: anyNamed('body'),
-            headers: anyNamed('headers'),
-          ),
-        );
+    late Map mockBody;
+    late String mockEncodedBody;
+
+    void mockPostRequest(int statusCode, {String? body}) {
+      when(
+        client.post(
+          any,
+          body: anyNamed('body'),
+          headers: anyNamed('headers'),
+        ),
+      ).thenAnswer(
+        (_) async => Response(body ?? mockEncodedBody, statusCode),
+      );
+    }
+
+    setUp(() {
+      mockBody = {'any_key': 'anY_value'};
+      mockEncodedBody = jsonEncode(mockBody);
+      mockPostRequest(200);
+    });
 
     test(
       'Should call post with body',
       () async {
-        final uri = HttpAdapter.convertUrlToHttpUri(url);
-
-        mockPostRequest().thenAnswer((_) async => Response('{}', 200));
-
-        const mockBody = {'any_key': 'anY_value'};
-        final mockEncodedBody = jsonEncode(mockBody);
-
-        await sut.request(
-          url: url,
-          method: 'post',
-          body: mockBody,
-        );
-
-        verify(
-          client.post(
-            uri,
-            body: mockEncodedBody,
-            headers: sut.headers,
-          ),
-        );
+        await sut.request(url: url, method: 'post', body: mockBody);
+        verify(client.post(uri, body: mockEncodedBody, headers: sut.headers));
       },
     );
 
     test(
       'Should call post without body',
       () async {
-        final uri = HttpAdapter.convertUrlToHttpUri(url);
-
-        mockPostRequest().thenAnswer((_) async => Response('{}', 200));
-
         await sut.request(url: url, method: 'post');
-
-        verify(
-          client.post(
-            uri,
-            headers: sut.headers,
-          ),
-        );
+        verify(client.post(uri, headers: sut.headers));
       },
     );
 
     test(
       'Should return data if post returns 200',
       () async {
-        const mockResponse = {'any_key': 'anY_value'};
-        final mockEncodedResponse = jsonEncode(mockResponse);
-
-        mockPostRequest().thenAnswer(
-          (_) async => Response(mockEncodedResponse, 200),
-        );
-
         final response = await sut.request(url: url, method: 'post');
-
-        expect(response, mockResponse);
+        expect(response, mockBody);
       },
     );
 
     test(
       'Should return null if post returns 200 with no data',
       () async {
-        mockPostRequest().thenAnswer(
-          (_) async => Response('', 200),
-        );
-
+        mockPostRequest(200, body: '');
         final response = await sut.request(url: url, method: 'post');
-
         expect(response, null);
       },
     );
