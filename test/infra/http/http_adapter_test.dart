@@ -108,11 +108,20 @@ void main() {
     );
 
     test(
-      'Should throw a UnauthorizedRequest if post returns 401',
+      'Should throw a UnauthorizedError if post returns 401',
       () async {
         mockPostRequest(401);
         final future = sut.request(url: url, method: 'post');
         expect(future, throwsA(HttpError.unauthorized));
+      },
+    );
+
+    test(
+      'Should throw a ForbiddenError if post returns 403',
+      () async {
+        mockPostRequest(403);
+        final future = sut.request(url: url, method: 'post');
+        expect(future, throwsA(HttpError.forbidden));
       },
     );
 
