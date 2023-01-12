@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 import '../../data/http/http.dart';
@@ -29,34 +30,51 @@ class HttpAdapter implements HttpClient {
     required String method,
     required String url,
   }) async {
+    late Response clientResponse;
+
     final encodedBody = body != null ? jsonEncode(body) : null;
 
-    final clientResponse = await client.post(
-      convertUrlToHttpUri(url),
-      body: encodedBody,
-      headers: headers,
-    );
-
-    if (clientResponse.statusCode == 204) {
-      return null;
+    try {
+      if (method == 'post') {
+        clientResponse = await client.post(
+          convertUrlToHttpUri(url),
+          body: encodedBody,
+          headers: headers,
+        );
+      } else {
+        throw HttpError.invalidMethodError;
+      }
+    } catch (err) {
+      if (err is HttpError) rethrow;
+      throw HttpError.unknown;
     }
 
-    if (clientResponse.statusCode >= 200 && clientResponse.statusCode < 300) {
-      return clientResponse.body.isNotEmpty
-          ? jsonDecode(clientResponse.body)
-          : null;
+    return handleClientResponse(clientResponse);
+  }
+
+  @protected
+  Map? handleClientResponse(Response response) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      if (response.statusCode == 204 || response.body.isEmpty) {
+        return null;
+      }
+      return jsonDecode(response.body);
     }
 
-    if (clientResponse.statusCode == 400) {
+    if (response.statusCode == 400) {
       throw HttpError.badRequest;
     }
 
-    if (clientResponse.statusCode == 401) {
+    if (response.statusCode == 401) {
       throw HttpError.unauthorized;
     }
 
-    if (clientResponse.statusCode == 403) {
+    if (response.statusCode == 403) {
       throw HttpError.forbidden;
+    }
+
+    if (response.statusCode == 404) {
+      throw HttpError.notFound;
     }
 
     throw HttpError.serverError;

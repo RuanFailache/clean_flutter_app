@@ -25,6 +25,36 @@ void main() {
     uri = HttpAdapter.convertUrlToHttpUri(url);
   });
 
+  group('shared', () {
+    void mockRequestError(dynamic error) {
+      when(
+        client.post(
+          any,
+          body: anyNamed('body'),
+          headers: anyNamed('headers'),
+        ),
+      ).thenThrow(error);
+    }
+
+    test(
+      'Should throw InvalidMethodError if invalid method is provided',
+      () async {
+        mockRequestError(HttpError.invalidMethodError);
+        final future = sut.request(method: 'invalid_method', url: url);
+        expect(future, throwsA(HttpError.invalidMethodError));
+      },
+    );
+
+    test(
+      'Should throw UnknownError if invalid method is provided',
+      () async {
+        mockRequestError(Exception());
+        final future = sut.request(method: 'post', url: url);
+        expect(future, throwsA(HttpError.unknown));
+      },
+    );
+  });
+
   group('post', () {
     late Map mockBody;
     late String mockEncodedBody;
@@ -122,6 +152,15 @@ void main() {
         mockPostRequest(403);
         final future = sut.request(url: url, method: 'post');
         expect(future, throwsA(HttpError.forbidden));
+      },
+    );
+
+    test(
+      'Should throw a NotFoundError if post returns 404',
+      () async {
+        mockPostRequest(404);
+        final future = sut.request(url: url, method: 'post');
+        expect(future, throwsA(HttpError.notFound));
       },
     );
 
