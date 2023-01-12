@@ -7,6 +7,8 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import 'package:for_dev/infra/http/http.dart';
+
 import './http_adapter_test.mocks.dart';
 
 @GenerateMocks([Client])
@@ -77,44 +79,32 @@ void main() {
         expect(response, null);
       },
     );
-  });
-}
 
-class HttpAdapter implements HttpClient {
-  final Client client;
-
-  HttpAdapter(
-    this.client,
-  );
-
-  static Uri convertUrlToHttpUri(String url) {
-    final urlWithoutHttp = url.replaceFirst('http://', '');
-    final urlAuthority = urlWithoutHttp.split('/')[0];
-    final urlPaths = '/${urlWithoutHttp.split('/').sublist(1).join('/')}';
-    return Uri.http(urlAuthority, urlPaths);
-  }
-
-  Map<String, String> get headers => {
-        'content-type': 'application/json',
-        'accept': 'application/json',
-      };
-
-  @override
-  Future<Map?> request({
-    Map? body,
-    required String method,
-    required String url,
-  }) async {
-    final encodedBody = body != null ? jsonEncode(body) : null;
-
-    final clientResponse = await client.post(
-      convertUrlToHttpUri(url),
-      body: encodedBody,
-      headers: headers,
+    test(
+      'Should return null if post returns 204',
+      () async {
+        mockPostRequest(204, body: '');
+        final response = await sut.request(url: url, method: 'post');
+        expect(response, null);
+      },
     );
 
-    return clientResponse.body.isNotEmpty
-        ? jsonDecode(clientResponse.body)
-        : null;
-  }
+    test(
+      'Should return null if post returns 204',
+      () async {
+        mockPostRequest(204);
+        final response = await sut.request(url: url, method: 'post');
+        expect(response, null);
+      },
+    );
+
+    test(
+      'Should throw a BadRequest if post returns 400',
+      () async {
+        mockPostRequest(400);
+        final future = sut.request(url: url, method: 'post');
+        expect(future, throwsA(HttpError.badRequest));
+      },
+    );
+  });
 }
