@@ -24,6 +24,10 @@ class RemoteAuthentication {
         body: body,
       );
 
+      if (httpClientResponse == null) {
+        throw HttpError.serverError;
+      }
+
       return RemoteAccountModel.fromJson(httpClientResponse).toEntity();
     } on HttpError catch (err) {
       throw err == HttpError.unauthorized
@@ -42,9 +46,7 @@ class RemoteAuthenticationParams {
     required this.password,
   });
 
-  factory RemoteAuthenticationParams.fromDomain(
-    AuthenticationParams params,
-  ) =>
+  factory RemoteAuthenticationParams.fromDomain(AuthenticationParams params,) =>
       RemoteAuthenticationParams(
         email: params.email,
         password: params.secret,
