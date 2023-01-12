@@ -7,7 +7,9 @@ import '../../data/http/http.dart';
 class HttpAdapter implements HttpClient {
   final Client client;
 
-  HttpAdapter(this.client,);
+  HttpAdapter(
+    this.client,
+  );
 
   static Uri convertUrlToHttpUri(String url) {
     final urlWithoutHttp = url.replaceFirst('http://', '');
@@ -16,8 +18,7 @@ class HttpAdapter implements HttpClient {
     return Uri.http(urlAuthority, urlPaths);
   }
 
-  Map<String, String> get headers =>
-      {
+  Map<String, String> get headers => {
         'content-type': 'application/json',
         'accept': 'application/json',
       };
@@ -36,14 +37,20 @@ class HttpAdapter implements HttpClient {
       headers: headers,
     );
 
+    if (clientResponse.statusCode == 204) {
+      return null;
+    }
+
+    if (clientResponse.statusCode >= 200 && clientResponse.statusCode < 300) {
+      return clientResponse.body.isNotEmpty
+          ? jsonDecode(clientResponse.body)
+          : null;
+    }
+
     if (clientResponse.statusCode == 400) {
       throw HttpError.badRequest;
     }
 
-    if (clientResponse.statusCode == 204 || clientResponse.body.isEmpty) {
-      return null;
-    }
-
-    return jsonDecode(clientResponse.body);
+    throw HttpError.serverError;
   }
 }
