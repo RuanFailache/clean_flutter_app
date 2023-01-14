@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:for_dev/ui/pages/login_page.dart';
+import 'package:for_dev/ui/pages/login/login_page.dart';
 import 'package:for_dev/ui/theme/theme.dart';
 
 class ForDevApp extends StatelessWidget {

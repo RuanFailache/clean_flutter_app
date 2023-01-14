@@ -33,7 +33,7 @@ class LoginPageForm extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: null,
                 child: const Text('Entrar'),
               ),
             ),
