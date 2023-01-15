@@ -39,4 +39,9 @@ class BlocLoginPresenter implements LoginPresenter {
   @override
   // TODO: implement isFormValidController
   Stream<bool> get isFormValidController => throw UnimplementedError();
+
+  @override
+  void auth() {
+    // TODO: implement auth
+  }
 }
