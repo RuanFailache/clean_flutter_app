@@ -13,6 +13,7 @@ import 'login_page_test.mocks.dart';
 @GenerateMocks([LoginPresenter])
 void main() {
   late LoginPresenter presenter;
+
   late StreamController<String> emailErrorController;
   late StreamController<String> passwordErrorController;
   late StreamController<String> loginErrorController;
@@ -29,34 +30,44 @@ void main() {
     );
   }
 
-  Future<void> loadPage(WidgetTester tester) async {
-    presenter = MockLoginPresenter();
+  void initStreams() {
     emailErrorController = StreamController<String>();
     passwordErrorController = StreamController<String>();
     loginErrorController = StreamController<String>();
     isFormValidController = StreamController<bool>();
     isLoadingController = StreamController<bool>();
+  }
 
+  void mockStreams() {
     when(presenter.emailErrorStream).thenAnswer(
       (realInvocation) => emailErrorController.stream,
     );
-
     when(presenter.passwordErrorStream).thenAnswer(
       (realInvocation) => passwordErrorController.stream,
     );
-
     when(presenter.loginErrorController).thenAnswer(
       (realInvocation) => loginErrorController.stream,
     );
-
     when(presenter.isFormValidController).thenAnswer(
       (realInvocation) => isFormValidController.stream,
     );
-
     when(presenter.isLoadingController).thenAnswer(
       (realInvocation) => isLoadingController.stream,
     );
+  }
 
+  void closeStreams() {
+    emailErrorController.close();
+    passwordErrorController.close();
+    loginErrorController.close();
+    isFormValidController.close();
+    isLoadingController.close();
+  }
+
+  Future<void> loadPage(WidgetTester tester) async {
+    presenter = MockLoginPresenter();
+    initStreams();
+    mockStreams();
     await tester.pumpWidget(
       MaterialApp(
         home: LoginPage(
@@ -66,13 +77,7 @@ void main() {
     );
   }
 
-  tearDown(() {
-    emailErrorController.close();
-    passwordErrorController.close();
-    loginErrorController.close();
-    isFormValidController.close();
-    isLoadingController.close();
-  });
+  tearDown(closeStreams);
 
   testWidgets(
     'Should load with correct initial state',
