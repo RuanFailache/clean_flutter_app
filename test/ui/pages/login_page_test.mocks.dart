@@ -38,6 +38,11 @@ class MockLoginPresenter extends _i1.Mock implements _i2.LoginPresenter {
         returnValue: _i3.Stream<String>.empty(),
       ) as _i3.Stream<String>);
   @override
+  _i3.Stream<String> get loginErrorController => (super.noSuchMethod(
+        Invocation.getter(#loginErrorController),
+        returnValue: _i3.Stream<String>.empty(),
+      ) as _i3.Stream<String>);
+  @override
   _i3.Stream<bool> get isFormValidController => (super.noSuchMethod(
         Invocation.getter(#isFormValidController),
         returnValue: _i3.Stream<bool>.empty(),

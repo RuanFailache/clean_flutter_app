@@ -26,25 +26,35 @@ class LoginPage extends StatelessWidget {
               showDialog(
                 context: context,
                 barrierDismissible: false,
-                builder: (context) =>
-                    SimpleDialog(
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            CircularProgressIndicator(),
-                            SizedBox(height: 16),
-                            Text('Aguarde...', textAlign: TextAlign.center),
-                          ],
-                        ),
+                builder: (context) => SimpleDialog(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 16),
+                        Text('Aguarde...', textAlign: TextAlign.center),
                       ],
                     ),
+                  ],
+                ),
               );
             } else {
               final navigator = Navigator.of(context);
               if (navigator.canPop()) {
                 navigator.pop();
               }
+            }
+          });
+
+          presenter.loginErrorController.listen((event) {
+            if (event.isNotEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.red[900],
+                  content: Text(event),
+                ),
+              );
             }
           });
 
@@ -63,10 +73,7 @@ class LoginPage extends StatelessWidget {
                           children: [
                             Text(
                               'Login'.toUpperCase(),
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .headline1,
+                              style: Theme.of(context).textTheme.headline1,
                             ),
                             const SizedBox(height: 32),
                             StreamBuilder(

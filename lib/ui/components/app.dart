@@ -48,4 +48,8 @@ class BlocLoginPresenter implements LoginPresenter {
   @override
   // TODO: implement isLoadingController
   Stream<bool> get isLoadingController => throw UnimplementedError();
+
+  @override
+  // TODO: implement loginErrorController
+  Stream<String> get loginErrorController => throw UnimplementedError();
 }
