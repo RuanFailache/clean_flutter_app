@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:faker/faker.dart';
-import 'package:for_dev/data/http/http.dart';
 import 'package:http/http.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import 'package:for_dev/data/http/http.dart';
 import 'package:for_dev/infra/http/http.dart';
 
 import './http_adapter_test.mocks.dart';

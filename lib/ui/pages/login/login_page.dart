@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:for_dev/ui/pages/login/login_presenter.dart';
 import 'package:for_dev/ui/pages/login/widgets/widgets.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  final LoginPresenter presenter;
+
+  const LoginPage({
+    super.key,
+    required this.presenter,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
-          const double contentMaxHeight = 636.5;
+          const double contentMaxHeight = 650;
 
           final double pageMaxHeight = constraints.maxHeight > contentMaxHeight
               ? constraints.maxHeight
@@ -19,10 +25,12 @@ class LoginPage extends StatelessWidget {
             child: ConstrainedBox(
               constraints: BoxConstraints(maxHeight: pageMaxHeight),
               child: Column(
-                children: const [
-                  LoginPageHeader(),
+                children: [
+                  const LoginPageHeader(),
                   Expanded(
-                    child: LoginPageForm(),
+                    child: LoginPageForm(
+                      presenter: presenter,
+                    ),
                   ),
                 ],
               ),

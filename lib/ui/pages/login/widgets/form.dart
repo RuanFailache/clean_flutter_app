@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:for_dev/ui/pages/login/login_presenter.dart';
 
 class LoginPageForm extends StatelessWidget {
-  const LoginPageForm({super.key});
+  final LoginPresenter presenter;
+
+  const LoginPageForm({
+    super.key,
+    required this.presenter,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Form(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -17,24 +23,30 @@ class LoginPageForm extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             TextFormField(
+              onChanged: presenter.validateEmail,
               decoration: const InputDecoration(
                 labelText: 'Email',
                 icon: Icon(Icons.email),
               ),
             ),
             const SizedBox(height: 16),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Senha',
-                icon: Icon(Icons.lock),
+            StreamBuilder(
+              stream: presenter.emailErrorStream,
+              builder: (context, snapshot) => TextFormField(
+                onChanged: presenter.validatePassword,
+                decoration: InputDecoration(
+                  labelText: 'Senha',
+                  errorText: snapshot.data,
+                  icon: const Icon(Icons.lock),
+                ),
               ),
             ),
             const SizedBox(height: 24),
-            SizedBox(
+            const SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: null,
-                child: const Text('Entrar'),
+                child: Text('Entrar'),
               ),
             ),
             const SizedBox(height: 16),
