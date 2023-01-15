@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:for_dev/ui/components/components.dart';
 import 'package:for_dev/ui/pages/login/login_presenter.dart';
 import 'package:for_dev/ui/pages/login/widgets/widgets.dart';
 
@@ -34,27 +35,9 @@ class _LoginPageState extends State<LoginPage> {
 
           widget.presenter.isLoadingController.listen((event) {
             if (event) {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) => SimpleDialog(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        CircularProgressIndicator(),
-                        SizedBox(height: 16),
-                        Text('Aguarde...', textAlign: TextAlign.center),
-                      ],
-                    ),
-                  ],
-                ),
-              );
+              SpinnerDialog.show(context);
             } else {
-              final navigator = Navigator.of(context);
-              if (navigator.canPop()) {
-                navigator.pop();
-              }
+              SpinnerDialog.hide(context);
             }
           });
 
