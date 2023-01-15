@@ -31,4 +31,8 @@ class BlocLoginPresenter implements LoginPresenter {
   @override
   // TODO: implement emailErrorStream
   Stream<String> get emailErrorStream => throw UnimplementedError();
+
+  @override
+  // TODO: implement emailErrorStream
+  Stream<String> get passwordErrorStream => throw UnimplementedError();
 }

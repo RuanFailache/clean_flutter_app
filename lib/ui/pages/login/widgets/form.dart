@@ -22,16 +22,20 @@ class LoginPageForm extends StatelessWidget {
               style: Theme.of(context).textTheme.headline1,
             ),
             const SizedBox(height: 32),
-            TextFormField(
-              onChanged: presenter.validateEmail,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                icon: Icon(Icons.email),
+            StreamBuilder(
+              stream: presenter.emailErrorStream,
+              builder: (context, snapshot) => TextFormField(
+                onChanged: presenter.validateEmail,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  errorText: snapshot.data,
+                  icon: const Icon(Icons.email),
+                ),
               ),
             ),
             const SizedBox(height: 16),
             StreamBuilder(
-              stream: presenter.emailErrorStream,
+              stream: presenter.passwordErrorStream,
               builder: (context, snapshot) => TextFormField(
                 onChanged: presenter.validatePassword,
                 decoration: InputDecoration(
