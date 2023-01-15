@@ -16,6 +16,16 @@ void main() {
   late StreamController<String> emailErrorController;
   late StreamController<String> passwordErrorController;
 
+  Finder getTextFormFieldChildrenByIcon(IconData icon) {
+    return find.descendant(
+      of: find.ancestor(
+        of: find.byIcon(icon),
+        matching: find.byType(TextFormField),
+      ),
+      matching: find.byType(Text),
+    );
+  }
+
   Future<void> loadPage(WidgetTester tester) async {
     presenter = MockLoginPresenter();
     emailErrorController = StreamController<String>();
@@ -47,13 +57,8 @@ void main() {
     (WidgetTester tester) async {
       await loadPage(tester);
 
-      final emailTextFormFieldChildren = find.descendant(
-        of: find.bySemanticsLabel('Email'),
-        matching: find.byType(Text),
-      );
-
       expect(
-        emailTextFormFieldChildren,
+        getTextFormFieldChildrenByIcon(Icons.email),
         findsOneWidget,
         reason: '''
           When a TextFormField has only one child, means it has no errors,
@@ -61,12 +66,10 @@ void main() {
         ''',
       );
 
-      final passwordTextFormFieldChildren = find.descendant(
-        of: find.bySemanticsLabel('Senha'),
-        matching: find.byType(Text),
+      expect(
+        getTextFormFieldChildrenByIcon(Icons.lock),
+        findsOneWidget,
       );
-
-      expect(passwordTextFormFieldChildren, findsOneWidget);
 
       final submitFormButton = tester.widget<ElevatedButton>(
         find.byType(
@@ -106,6 +109,21 @@ void main() {
   );
 
   testWidgets(
+    'Should present no error if email is valid',
+    (tester) async {
+      await loadPage(tester);
+
+      emailErrorController.add('');
+      await tester.pump();
+
+      expect(
+        getTextFormFieldChildrenByIcon(Icons.email),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
     'Should present error if password is invalid',
     (tester) async {
       await loadPage(tester);
@@ -114,6 +132,21 @@ void main() {
       await tester.pump();
 
       expect(find.text('any error'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Should present no error if password is valid',
+    (tester) async {
+      await loadPage(tester);
+
+      emailErrorController.add('');
+      await tester.pump();
+
+      expect(
+        getTextFormFieldChildrenByIcon(Icons.lock),
+        findsOneWidget,
+      );
     },
   );
 }

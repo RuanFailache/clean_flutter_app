@@ -24,26 +24,32 @@ class LoginPageForm extends StatelessWidget {
             const SizedBox(height: 32),
             StreamBuilder(
               stream: presenter.emailErrorStream,
-              builder: (context, snapshot) => TextFormField(
-                onChanged: presenter.validateEmail,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  errorText: snapshot.data,
-                  icon: const Icon(Icons.email),
-                ),
-              ),
+              builder: (context, snapshot) {
+                final hasErrorText = snapshot.data?.isNotEmpty == true;
+                return TextFormField(
+                  onChanged: presenter.validateEmail,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    errorText: hasErrorText ? snapshot.data : null,
+                    icon: const Icon(Icons.email),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 16),
             StreamBuilder(
               stream: presenter.passwordErrorStream,
-              builder: (context, snapshot) => TextFormField(
-                onChanged: presenter.validatePassword,
-                decoration: InputDecoration(
-                  labelText: 'Senha',
-                  errorText: snapshot.data,
-                  icon: const Icon(Icons.lock),
-                ),
-              ),
+              builder: (context, snapshot) {
+                final hasErrorText = snapshot.data?.isNotEmpty == true;
+                return TextFormField(
+                  onChanged: presenter.validatePassword,
+                  decoration: InputDecoration(
+                    labelText: 'Senha',
+                    errorText: hasErrorText ? snapshot.data : null,
+                    icon: const Icon(Icons.lock),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 24),
             const SizedBox(
