@@ -16,6 +16,7 @@ void main() {
   late StreamController<String> emailErrorController;
   late StreamController<String> passwordErrorController;
   late StreamController<bool> isFormValidController;
+  late StreamController<bool> isLoadingController;
 
   Finder getTextFormFieldChildrenByIcon(IconData icon) {
     return find.descendant(
@@ -32,6 +33,7 @@ void main() {
     emailErrorController = StreamController<String>();
     passwordErrorController = StreamController<String>();
     isFormValidController = StreamController<bool>();
+    isLoadingController = StreamController<bool>();
 
     when(presenter.emailErrorStream).thenAnswer(
       (realInvocation) => emailErrorController.stream,
@@ -43,6 +45,10 @@ void main() {
 
     when(presenter.isFormValidController).thenAnswer(
       (realInvocation) => isFormValidController.stream,
+    );
+
+    when(presenter.isLoadingController).thenAnswer(
+      (realInvocation) => isLoadingController.stream,
     );
 
     await tester.pumpWidget(
@@ -203,6 +209,18 @@ void main() {
       await tester.pump();
 
       verify(presenter.auth()).called(1);
+    },
+  );
+
+  testWidgets(
+    'Should present loading',
+    (tester) async {
+      await loadPage(tester);
+
+      isLoadingController.add(true);
+      await tester.pump();
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
     },
   );
 }
