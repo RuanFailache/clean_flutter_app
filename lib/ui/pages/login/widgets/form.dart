@@ -52,11 +52,16 @@ class LoginPageForm extends StatelessWidget {
               },
             ),
             const SizedBox(height: 24),
-            const SizedBox(
+            SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: null,
-                child: Text('Entrar'),
+              child: StreamBuilder<bool>(
+                stream: presenter.isFormValidController,
+                builder: (context, snapshot) {
+                  return ElevatedButton(
+                    onPressed: snapshot.data == true ? () {} : null,
+                    child: const Text('Entrar'),
+                  );
+                },
               ),
             ),
             const SizedBox(height: 16),

@@ -15,6 +15,7 @@ void main() {
   late LoginPresenter presenter;
   late StreamController<String> emailErrorController;
   late StreamController<String> passwordErrorController;
+  late StreamController<bool> isFormValidController;
 
   Finder getTextFormFieldChildrenByIcon(IconData icon) {
     return find.descendant(
@@ -30,6 +31,7 @@ void main() {
     presenter = MockLoginPresenter();
     emailErrorController = StreamController<String>();
     passwordErrorController = StreamController<String>();
+    isFormValidController = StreamController<bool>();
 
     when(presenter.emailErrorStream).thenAnswer(
       (realInvocation) => emailErrorController.stream,
@@ -37,6 +39,10 @@ void main() {
 
     when(presenter.passwordErrorStream).thenAnswer(
       (realInvocation) => passwordErrorController.stream,
+    );
+
+    when(presenter.isFormValidController).thenAnswer(
+      (realInvocation) => isFormValidController.stream,
     );
 
     await tester.pumpWidget(
@@ -147,6 +153,24 @@ void main() {
         getTextFormFieldChildrenByIcon(Icons.lock),
         findsOneWidget,
       );
+    },
+  );
+
+  testWidgets(
+    'Should disable button if form is invalid',
+    (tester) async {
+      await loadPage(tester);
+
+      isFormValidController.add(true);
+      await tester.pump();
+
+      final submitFormButton = tester.widget<ElevatedButton>(
+        find.byType(
+          ElevatedButton,
+        ),
+      );
+
+      expect(submitFormButton.onPressed, isNotNull);
     },
   );
 }
