@@ -90,6 +90,7 @@ void main() {
       );
 
       expect(submitFormButton.onPressed, null);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
     },
   );
 
@@ -221,6 +222,20 @@ void main() {
       await tester.pump();
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Should hide loading',
+    (tester) async {
+      await loadPage(tester);
+
+      isLoadingController.add(true);
+      await tester.pump();
+      isLoadingController.add(false);
+      await tester.pump();
+
+      expect(find.byType(CircularProgressIndicator), findsNothing);
     },
   );
 }
