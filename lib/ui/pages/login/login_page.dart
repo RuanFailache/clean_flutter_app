@@ -2,13 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:for_dev/ui/pages/login/login_presenter.dart';
 import 'package:for_dev/ui/pages/login/widgets/widgets.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   final LoginPresenter presenter;
 
   const LoginPage({
     super.key,
     required this.presenter,
   });
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  @override
+  void dispose() {
+    super.dispose();
+    widget.presenter.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +32,7 @@ class LoginPage extends StatelessWidget {
               ? constraints.maxHeight
               : contentMaxHeight;
 
-          presenter.isLoadingController.listen((event) {
+          widget.presenter.isLoadingController.listen((event) {
             if (event) {
               showDialog(
                 context: context,
@@ -47,7 +58,7 @@ class LoginPage extends StatelessWidget {
             }
           });
 
-          presenter.loginErrorController.listen((event) {
+          widget.presenter.loginErrorController.listen((event) {
             if (event.isNotEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -77,10 +88,10 @@ class LoginPage extends StatelessWidget {
                             ),
                             const SizedBox(height: 32),
                             StreamBuilder(
-                              stream: presenter.emailErrorStream,
+                              stream: widget.presenter.emailErrorStream,
                               builder: (context, snapshot) {
                                 return TextFormField(
-                                  onChanged: presenter.validateEmail,
+                                  onChanged: widget.presenter.validateEmail,
                                   decoration: InputDecoration(
                                     labelText: 'Email',
                                     icon: const Icon(Icons.email),
@@ -93,10 +104,10 @@ class LoginPage extends StatelessWidget {
                             ),
                             const SizedBox(height: 16),
                             StreamBuilder(
-                              stream: presenter.passwordErrorStream,
+                              stream: widget.presenter.passwordErrorStream,
                               builder: (context, snapshot) {
                                 return TextFormField(
-                                  onChanged: presenter.validatePassword,
+                                  onChanged: widget.presenter.validatePassword,
                                   decoration: InputDecoration(
                                     labelText: 'Senha',
                                     icon: const Icon(Icons.lock),
@@ -111,11 +122,11 @@ class LoginPage extends StatelessWidget {
                             SizedBox(
                               width: double.infinity,
                               child: StreamBuilder<bool>(
-                                stream: presenter.isFormValidController,
+                                stream: widget.presenter.isFormValidController,
                                 builder: (context, snapshot) {
                                   return ElevatedButton(
                                     onPressed: snapshot.data == true
-                                        ? presenter.auth
+                                        ? widget.presenter.auth
                                         : null,
                                     child: const Text('Entrar'),
                                   );
