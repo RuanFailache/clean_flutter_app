@@ -173,4 +173,22 @@ void main() {
       expect(submitFormButton.onPressed, isNotNull);
     },
   );
+
+  testWidgets(
+    'Should enable button if form is valid',
+    (tester) async {
+      await loadPage(tester);
+
+      isFormValidController.add(false);
+      await tester.pump();
+
+      final submitFormButton = tester.widget<ElevatedButton>(
+        find.byType(
+          ElevatedButton,
+        ),
+      );
+
+      expect(submitFormButton.onPressed, null);
+    },
+  );
 }
