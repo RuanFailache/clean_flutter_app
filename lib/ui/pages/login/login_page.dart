@@ -3,6 +3,7 @@ import 'package:for_dev/ui/components/components.dart';
 import 'package:for_dev/ui/components/error_snack_bar.dart';
 import 'package:for_dev/ui/pages/login/login_presenter.dart';
 import 'package:for_dev/ui/pages/login/widgets/email_input.dart';
+import 'package:for_dev/ui/pages/login/widgets/login_button.dart';
 import 'package:for_dev/ui/pages/login/widgets/password_input.dart';
 import 'package:for_dev/ui/pages/login/widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -75,21 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                               const SizedBox(height: 16),
                               const PasswordInput(),
                               const SizedBox(height: 24),
-                              SizedBox(
-                                width: double.infinity,
-                                child: StreamBuilder<bool>(
-                                  stream:
-                                      widget.presenter.isFormValidController,
-                                  builder: (context, snapshot) {
-                                    return ElevatedButton(
-                                      onPressed: snapshot.data == true
-                                          ? widget.presenter.auth
-                                          : null,
-                                      child: const Text('Entrar'),
-                                    );
-                                  },
-                                ),
-                              ),
+                              const LoginButton(),
                               const SizedBox(height: 16),
                               TextButton(
                                 onPressed: () {},
