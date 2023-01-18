@@ -22,13 +22,21 @@ class StreamLoginPresenter {
 class MockValidation extends Mock implements Validation {}
 
 void main() {
+  late Validation validation;
+  late StreamLoginPresenter sut;
+  late String email;
+
+  setUp(() {
+    validation = MockValidation();
+    sut = StreamLoginPresenter(validation: validation);
+    email = faker.internet.email();
+  });
+
   test(
     'Should call Validation with correct email',
     () async {
-      final validation = MockValidation();
-      final sut = StreamLoginPresenter(validation: validation);
-      final email = faker.internet.email();
       sut.validateEmail(email);
+
       verify(
         validation.validate(
           field: 'email',
