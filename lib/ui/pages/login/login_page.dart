@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:for_dev/ui/components/components.dart';
 import 'package:for_dev/ui/components/error_snack_bar.dart';
 import 'package:for_dev/ui/pages/login/login_presenter.dart';
+import 'package:for_dev/ui/pages/login/widgets/email_input.dart';
 import 'package:for_dev/ui/pages/login/widgets/password_input.dart';
 import 'package:for_dev/ui/pages/login/widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -70,22 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                                 style: Theme.of(context).textTheme.headline1,
                               ),
                               const SizedBox(height: 32),
-                              StreamBuilder(
-                                stream: widget.presenter.emailErrorStream,
-                                builder: (context, snapshot) {
-                                  return TextFormField(
-                                    onChanged: widget.presenter.validateEmail,
-                                    decoration: InputDecoration(
-                                      labelText: 'Email',
-                                      icon: const Icon(Icons.email),
-                                      errorText:
-                                          snapshot.data?.isNotEmpty == true
-                                              ? snapshot.data
-                                              : null,
-                                    ),
-                                  );
-                                },
-                              ),
+                              const EmailInput(),
                               const SizedBox(height: 16),
                               const PasswordInput(),
                               const SizedBox(height: 24),
