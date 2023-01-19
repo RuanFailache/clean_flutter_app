@@ -70,7 +70,7 @@ void main() {
   test(
     'Should emit email error if validation fails',
     () {
-      mockValidation(field: 'email', value: 'error');
+      mockValidation(value: 'error');
 
       sut.emailErrorStream.listen(
         expectAsync1(
@@ -92,7 +92,29 @@ void main() {
   test(
     'Should emit password error if validation fails',
     () {
-      mockValidation(field: 'password', value: 'error');
+      mockValidation(value: 'error');
+
+      sut.passwordErrorStream.listen(
+        expectAsync1(
+          (error) => expect(error, 'error'),
+        ),
+      );
+
+      sut.isFormValidStream.listen(
+        expectAsync1(
+          (isValid) => expect(isValid, false),
+        ),
+      );
+
+      sut.validatePassword(password);
+      sut.validatePassword(password);
+    },
+  );
+
+  test(
+    'Should emit password error if validation fails',
+    () {
+      mockValidation(value: 'error');
 
       sut.passwordErrorStream.listen(
         expectAsync1(

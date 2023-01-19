@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
               ? constraints.maxHeight
               : contentMaxHeight;
 
-          widget.presenter.isLoadingController.listen((isLoading) {
+          widget.presenter.isLoadingStream.listen((isLoading) {
             if (isLoading) {
               SpinnerDialog.show(context);
             } else {
@@ -46,8 +46,8 @@ class _LoginPageState extends State<LoginPage> {
             }
           });
 
-          widget.presenter.loginErrorController.listen((error) {
-            if (error.isNotEmpty) {
+          widget.presenter.loginErrorStream.listen((error) {
+            if (error != null && error.isNotEmpty) {
               ErrorSnackBar.show(context, error);
             }
           });

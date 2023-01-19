@@ -45,13 +45,13 @@ void main() {
     when(presenter.passwordErrorStream).thenAnswer(
       (realInvocation) => passwordErrorController.stream,
     );
-    when(presenter.loginErrorController).thenAnswer(
+    when(presenter.loginErrorStream).thenAnswer(
       (realInvocation) => loginErrorController.stream,
     );
-    when(presenter.isFormValidController).thenAnswer(
+    when(presenter.isFormValidStream).thenAnswer(
       (realInvocation) => isFormValidController.stream,
     );
-    when(presenter.isLoadingController).thenAnswer(
+    when(presenter.isLoadingStream).thenAnswer(
       (realInvocation) => isLoadingController.stream,
     );
   }

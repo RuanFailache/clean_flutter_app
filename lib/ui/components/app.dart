@@ -30,15 +30,15 @@ class BlocLoginPresenter implements LoginPresenter {
 
   @override
   // TODO: implement emailErrorStream
-  Stream<String> get emailErrorStream => throw UnimplementedError();
+  Stream<String?> get emailErrorStream => throw UnimplementedError();
 
   @override
   // TODO: implement emailErrorStream
-  Stream<String> get passwordErrorStream => throw UnimplementedError();
+  Stream<String?> get passwordErrorStream => throw UnimplementedError();
 
   @override
-  // TODO: implement isFormValidController
-  Stream<bool> get isFormValidController => throw UnimplementedError();
+  // TODO: implement isFormValidStream
+  Stream<bool> get isFormValidStream => throw UnimplementedError();
 
   @override
   Future<void> auth() async {
@@ -46,12 +46,12 @@ class BlocLoginPresenter implements LoginPresenter {
   }
 
   @override
-  // TODO: implement isLoadingController
-  Stream<bool> get isLoadingController => throw UnimplementedError();
+  // TODO: implement isLoadingStream
+  Stream<bool> get isLoadingStream => throw UnimplementedError();
 
   @override
-  // TODO: implement loginErrorController
-  Stream<String> get loginErrorController => throw UnimplementedError();
+  // TODO: implement loginErrorStream
+  Stream<String> get loginErrorStream => throw UnimplementedError();
 
   @override
   void dispose() {

@@ -11,7 +11,7 @@ class LoginButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: StreamBuilder<bool>(
-        stream: presenter.isFormValidController,
+        stream: presenter.isFormValidStream,
         builder: (context, snapshot) {
           return ElevatedButton(
             onPressed: snapshot.data == true ? presenter.auth : null,
