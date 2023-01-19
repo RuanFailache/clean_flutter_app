@@ -28,28 +28,28 @@ class MockLoginPresenter extends _i1.Mock implements _i2.LoginPresenter {
   }
 
   @override
-  _i3.Stream<String> get emailErrorStream => (super.noSuchMethod(
+  _i3.Stream<String?> get emailErrorStream => (super.noSuchMethod(
         Invocation.getter(#emailErrorStream),
-        returnValue: _i3.Stream<String>.empty(),
-      ) as _i3.Stream<String>);
+        returnValue: _i3.Stream<String?>.empty(),
+      ) as _i3.Stream<String?>);
   @override
-  _i3.Stream<String> get passwordErrorStream => (super.noSuchMethod(
+  _i3.Stream<String?> get passwordErrorStream => (super.noSuchMethod(
         Invocation.getter(#passwordErrorStream),
-        returnValue: _i3.Stream<String>.empty(),
-      ) as _i3.Stream<String>);
+        returnValue: _i3.Stream<String?>.empty(),
+      ) as _i3.Stream<String?>);
   @override
-  _i3.Stream<String> get loginErrorController => (super.noSuchMethod(
-        Invocation.getter(#loginErrorController),
-        returnValue: _i3.Stream<String>.empty(),
-      ) as _i3.Stream<String>);
+  _i3.Stream<String?> get loginErrorStream => (super.noSuchMethod(
+        Invocation.getter(#loginErrorStream),
+        returnValue: _i3.Stream<String?>.empty(),
+      ) as _i3.Stream<String?>);
   @override
-  _i3.Stream<bool> get isFormValidController => (super.noSuchMethod(
-        Invocation.getter(#isFormValidController),
+  _i3.Stream<bool> get isFormValidStream => (super.noSuchMethod(
+        Invocation.getter(#isFormValidStream),
         returnValue: _i3.Stream<bool>.empty(),
       ) as _i3.Stream<bool>);
   @override
-  _i3.Stream<bool> get isLoadingController => (super.noSuchMethod(
-        Invocation.getter(#isLoadingController),
+  _i3.Stream<bool> get isLoadingStream => (super.noSuchMethod(
+        Invocation.getter(#isLoadingStream),
         returnValue: _i3.Stream<bool>.empty(),
       ) as _i3.Stream<bool>);
   @override

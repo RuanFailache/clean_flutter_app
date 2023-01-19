@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:for_dev/domain/usecases/authentication.dart';
 import 'package:for_dev/ui/pages/login/login.dart';
 
 import '../../dependencies/dependencies.dart';
@@ -7,8 +8,12 @@ import 'login_state.dart';
 
 class StreamLoginPresenter implements LoginPresenter {
   final Validation validation;
+  final Authentication authentication;
 
-  StreamLoginPresenter({required this.validation});
+  StreamLoginPresenter({
+    required this.validation,
+    required this.authentication,
+  });
 
   final LoginState _state = LoginState();
 
@@ -64,9 +69,13 @@ class StreamLoginPresenter implements LoginPresenter {
   }
 
   @override
-  Future<void> auth() {
-    // TODO: implement auth
-    throw UnimplementedError();
+  Future<void> auth() async {
+    await authentication.auth(
+      AuthenticationParams(
+        email: _state.email,
+        secret: _state.password,
+      ),
+    );
   }
 
   @override
