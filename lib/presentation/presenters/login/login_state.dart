@@ -7,6 +7,8 @@ class LoginState {
 
   String? passwordError;
 
+  bool isLoading = false;
+
   bool get isFormValid =>
       emailError == null &&
       email.isNotEmpty &&

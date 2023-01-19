@@ -17,6 +17,34 @@ void main() {
   late StreamLoginPresenter sut;
   late String email, password;
 
+  PostExpectation mockValidationCall([String? field]) =>
+      when(
+        validation.validate(
+          field: field ?? anyNamed('field'),
+          value: anyNamed('value'),
+        ),
+      );
+
+  PostExpectation mockAuthenticationCall() {
+    return when(authentication.auth(any));
+  }
+
+  void mockValidation({
+    String? field,
+    String? value,
+  }) {
+    mockValidationCall(field).thenReturn(value);
+  }
+
+  void mockAuthentication() {
+    mockAuthenticationCall().thenAnswer(
+          (_) async =>
+          AccountEntity(
+            faker.guid.guid(),
+          ),
+    );
+  }
+
   setUp(() {
     email = faker.internet.email();
     password = faker.internet.password();
@@ -28,25 +56,14 @@ void main() {
       validation: validation,
       authentication: authentication,
     );
+
+    mockValidation();
+    mockAuthentication();
   });
-
-  PostExpectation mockValidationCall([String? field]) => when(
-        validation.validate(
-          field: field ?? anyNamed('field'),
-          value: anyNamed('value'),
-        ),
-      );
-
-  void mockValidation({
-    String? field,
-    String? value,
-  }) {
-    mockValidationCall(field).thenReturn(value);
-  }
 
   test(
     'Should call Validation with correct email',
-    () async {
+        () async {
       mockValidation(field: 'email');
 
       sut.validateEmail(email);
@@ -62,7 +79,7 @@ void main() {
 
   test(
     'Should call Validation with correct password',
-    () async {
+        () async {
       mockValidation(field: 'password');
 
       sut.validatePassword(password);
@@ -78,18 +95,18 @@ void main() {
 
   test(
     'Should emit email error if validation fails',
-    () {
-      mockValidation(value: 'error');
+        () {
+      mockValidation(field: 'email', value: 'error');
 
       sut.emailErrorStream.listen(
         expectAsync1(
-          (error) => expect(error, 'error'),
+              (error) => expect(error, 'error'),
         ),
       );
 
       sut.isFormValidStream.listen(
         expectAsync1(
-          (isValid) => expect(isValid, false),
+              (isValid) => expect(isValid, false),
         ),
       );
 
@@ -100,18 +117,18 @@ void main() {
 
   test(
     'Should emit password error if validation fails',
-    () {
-      mockValidation(value: 'error');
+        () {
+      mockValidation(field: 'password', value: 'error');
 
       sut.passwordErrorStream.listen(
         expectAsync1(
-          (error) => expect(error, 'error'),
+              (error) => expect(error, 'error'),
         ),
       );
 
       sut.isFormValidStream.listen(
         expectAsync1(
-          (isValid) => expect(isValid, false),
+              (isValid) => expect(isValid, false),
         ),
       );
 
@@ -122,18 +139,18 @@ void main() {
 
   test(
     'Should emit password error if validation fails',
-    () {
-      mockValidation(value: 'error');
+        () {
+      mockValidation(field: 'password', value: 'error');
 
       sut.passwordErrorStream.listen(
         expectAsync1(
-          (error) => expect(error, 'error'),
+              (error) => expect(error, 'error'),
         ),
       );
 
       sut.isFormValidStream.listen(
         expectAsync1(
-          (isValid) => expect(isValid, false),
+              (isValid) => expect(isValid, false),
         ),
       );
 
@@ -144,13 +161,12 @@ void main() {
 
   test(
     'Should emit isFormValid as false when email is valid and password is invalid',
-    () {
-      mockValidation(field: 'email', value: null);
+        () {
       mockValidation(field: 'password', value: 'error');
 
       sut.isFormValidStream.listen(
         expectAsync1(
-          (isValid) => expect(isValid, false),
+              (isValid) => expect(isValid, false),
         ),
       );
 
@@ -161,13 +177,12 @@ void main() {
 
   test(
     'Should emit isFormValid as false when email is invalid and password is valid',
-    () {
+        () {
       mockValidation(field: 'email', value: 'error');
-      mockValidation(field: 'password', value: null);
 
       sut.isFormValidStream.listen(
         expectAsync1(
-          (isValid) => expect(isValid, false),
+              (isValid) => expect(isValid, false),
         ),
       );
 
@@ -178,10 +193,7 @@ void main() {
 
   test(
     'Should emit isFormValid as true when both email and password are valid',
-    () async {
-      mockValidation(field: 'email', value: null);
-      mockValidation(field: 'password', value: null);
-
+        () async {
       expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
 
       sut.validateEmail(email);
@@ -192,15 +204,7 @@ void main() {
 
   test(
     'Should call Authentication with correct values',
-    () async {
-      when(
-        authentication.auth(any),
-      ).thenAnswer(
-        (_) async => AccountEntity(''),
-      );
-
-      mockValidation();
-
+        () async {
       sut.validateEmail(email);
       sut.validatePassword(password);
 
@@ -214,6 +218,18 @@ void main() {
           ),
         ),
       ).called(1);
+    },
+  );
+
+  test(
+    'Should emit correct events on Authentication success',
+        () async {
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+
+      expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+
+      await sut.auth();
     },
   );
 }

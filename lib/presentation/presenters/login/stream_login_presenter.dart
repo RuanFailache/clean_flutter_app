@@ -19,7 +19,10 @@ class StreamLoginPresenter implements LoginPresenter {
 
   final _controller = StreamController<LoginState>.broadcast();
 
-  void _update() => _controller.add(_state);
+  void _update(Function callback) {
+    callback();
+    _controller.add(_state);
+  }
 
   Stream<State> _getStreamByState<State>(State Function(LoginState) state) {
     return _controller.stream.map(state).distinct();
@@ -40,8 +43,9 @@ class StreamLoginPresenter implements LoginPresenter {
   Stream<String?> get loginErrorStream => throw UnimplementedError();
 
   @override
-  // TODO: implement isLoadingStream
-  Stream<bool> get isLoadingStream => throw UnimplementedError();
+  Stream<bool> get isLoadingStream {
+    return _getStreamByState((state) => state.isLoading);
+  }
 
   @override
   Stream<bool> get isFormValidStream {
@@ -50,32 +54,36 @@ class StreamLoginPresenter implements LoginPresenter {
 
   @override
   void validateEmail(String email) {
-    _state.email = email;
-    _state.emailError = validation.validate(
-      field: 'email',
-      value: email,
-    );
-    _update();
+    _update(() {
+      _state.email = email;
+      _state.emailError = validation.validate(
+        field: 'email',
+        value: email,
+      );
+    });
   }
 
   @override
   void validatePassword(String password) {
-    _state.password = password;
-    _state.passwordError = validation.validate(
-      field: 'password',
-      value: password,
-    );
-    _update();
+    _update(() {
+      _state.password = password;
+      _state.passwordError = validation.validate(
+        field: 'password',
+        value: password,
+      );
+    });
   }
 
   @override
   Future<void> auth() async {
+    _update(() => _state.isLoading = true);
     await authentication.auth(
       AuthenticationParams(
         email: _state.email,
         secret: _state.password,
       ),
     );
+    _update(() => _state.isLoading = false);
   }
 
   @override
