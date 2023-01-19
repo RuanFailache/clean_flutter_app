@@ -12,12 +12,13 @@ import 'stream_login_presenter_test.mocks.dart';
 void main() {
   late MockValidation validation;
   late StreamLoginPresenter sut;
-  late String email;
+  late String email, password;
 
   setUp(() {
     validation = MockValidation();
     sut = StreamLoginPresenter(validation: validation);
     email = faker.internet.email();
+    password = faker.internet.password();
   });
 
   PostExpectation mockValidationCall([String? field]) => when(
@@ -38,11 +39,29 @@ void main() {
     'Should call Validation with correct email',
     () async {
       mockValidation(field: 'email');
+
       sut.validateEmail(email);
+
       verify(
         validation.validate(
           field: 'email',
           value: email,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'Should call Validation with correct password',
+    () async {
+      mockValidation(field: 'password');
+
+      sut.validatePassword(password);
+
+      verify(
+        validation.validate(
+          field: 'password',
+          value: password,
         ),
       ).called(1);
     },
@@ -67,6 +86,28 @@ void main() {
 
       sut.validateEmail(email);
       sut.validateEmail(email);
+    },
+  );
+
+  test(
+    'Should emit password error if validation fails',
+    () {
+      mockValidation(field: 'password', value: 'error');
+
+      sut.passwordErrorStream.listen(
+        expectAsync1(
+          (error) => expect(error, 'error'),
+        ),
+      );
+
+      sut.isFormValidStream.listen(
+        expectAsync1(
+          (isValid) => expect(isValid, false),
+        ),
+      );
+
+      sut.validatePassword(password);
+      sut.validatePassword(password);
     },
   );
 }
