@@ -45,6 +45,7 @@ class StreamLoginPresenter implements LoginPresenter {
 
   @override
   void validateEmail(String email) {
+    _state.email = email;
     _state.emailError = validation.validate(
       field: 'email',
       value: email,
@@ -54,6 +55,7 @@ class StreamLoginPresenter implements LoginPresenter {
 
   @override
   void validatePassword(String password) {
+    _state.password = password;
     _state.passwordError = validation.validate(
       field: 'password',
       value: password,

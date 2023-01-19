@@ -169,17 +169,14 @@ void main() {
 
   test(
     'Should emit isFormValid as true when both email and password are valid',
-    () {
+    () async {
       mockValidation(field: 'email', value: null);
       mockValidation(field: 'password', value: null);
 
-      sut.isFormValidStream.listen(
-        expectAsync1(
-          (isValid) => expect(isValid, true),
-        ),
-      );
+      expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
 
       sut.validateEmail(email);
+      await Future.delayed(Duration.zero);
       sut.validatePassword(password);
     },
   );
