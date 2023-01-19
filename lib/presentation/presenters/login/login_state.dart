@@ -3,5 +3,5 @@ class LoginState {
 
   String? passwordError;
 
-  bool get isFormValid => false;
+  bool get isFormValid => emailError == null && passwordError == null;
 }

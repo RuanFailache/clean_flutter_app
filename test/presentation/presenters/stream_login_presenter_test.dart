@@ -132,4 +132,55 @@ void main() {
       sut.validatePassword(password);
     },
   );
+
+  test(
+    'Should emit isFormValid as false when email is valid and password is invalid',
+    () {
+      mockValidation(field: 'email', value: null);
+      mockValidation(field: 'password', value: 'error');
+
+      sut.isFormValidStream.listen(
+        expectAsync1(
+          (isValid) => expect(isValid, false),
+        ),
+      );
+
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+    },
+  );
+
+  test(
+    'Should emit isFormValid as false when email is invalid and password is valid',
+    () {
+      mockValidation(field: 'email', value: 'error');
+      mockValidation(field: 'password', value: null);
+
+      sut.isFormValidStream.listen(
+        expectAsync1(
+          (isValid) => expect(isValid, false),
+        ),
+      );
+
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+    },
+  );
+
+  test(
+    'Should emit isFormValid as true when both email and password are valid',
+    () {
+      mockValidation(field: 'email', value: null);
+      mockValidation(field: 'password', value: null);
+
+      sut.isFormValidStream.listen(
+        expectAsync1(
+          (isValid) => expect(isValid, true),
+        ),
+      );
+
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+    },
+  );
 }
