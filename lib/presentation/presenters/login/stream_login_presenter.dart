@@ -8,12 +8,16 @@ class StreamLoginPresenter {
 
   StreamLoginPresenter({required this.validation});
 
-  final _controller = StreamController<LoginState>();
+  final _controller = StreamController<LoginState>.broadcast();
 
   final LoginState _state = LoginState();
 
   Stream<String?> get emailErrorStream {
     return _controller.stream.map((state) => state.emailError).distinct();
+  }
+
+  Stream<bool> get isFormValidStream {
+    return _controller.stream.map((state) => state.isFormValid).distinct();
   }
 
   void validateEmail(String email) {
