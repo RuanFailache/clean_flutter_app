@@ -1,35 +1,12 @@
-import 'dart:async';
-
 import 'package:faker/faker.dart';
-import 'package:for_dev/presentation/dependencies/dependencies.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import 'package:for_dev/presentation/dependencies/dependencies.dart';
+import 'package:for_dev/presentation/presenters/presenters.dart';
+
 import 'stream_login_presenter_test.mocks.dart';
-
-class LoginState {
-  String? emailError;
-}
-
-class StreamLoginPresenter {
-  final Validation validation;
-
-  StreamLoginPresenter({required this.validation});
-
-  final _controller = StreamController<LoginState>();
-
-  final LoginState _state = LoginState();
-
-  Stream<String?> get emailErrorStream {
-    return _controller.stream.map((state) => state.emailError);
-  }
-
-  void validateEmail(String email) {
-    _state.emailError = validation.validate(field: 'email', value: email);
-    _controller.add(_state);
-  }
-}
 
 @GenerateMocks([Validation])
 void main() {
