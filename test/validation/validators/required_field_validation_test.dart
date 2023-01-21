@@ -14,19 +14,32 @@ class RequiredFieldValidation extends FieldValidation {
 
   @override
   String? validate(String value) {
-    return null;
+    return value.isEmpty ? 'Campo obrigatório' : null;
   }
 }
 
 void main() {
+  late RequiredFieldValidation sut;
+
+  setUp(() {
+    sut = RequiredFieldValidation('any_field');
+  });
+
   test(
     'Should return null if value is not empty',
     () async {
-      final sut = RequiredFieldValidation('any_field');
-
       final error = sut.validate('any_value');
 
       expect(error, null);
+    },
+  );
+
+  test(
+    'Should return error if value is empty',
+    () async {
+      final error = sut.validate('');
+
+      expect(error, 'Campo obrigatório');
     },
   );
 }
