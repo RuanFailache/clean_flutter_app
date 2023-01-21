@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:for_dev/domain/helpers/domain_error.dart';
 import 'package:for_dev/domain/usecases/authentication.dart';
 import 'package:for_dev/ui/pages/login/login.dart';
 
@@ -39,8 +40,9 @@ class StreamLoginPresenter implements LoginPresenter {
   }
 
   @override
-  // TODO: implement loginErrorStream
-  Stream<String?> get loginErrorStream => throw UnimplementedError();
+  Stream<String?> get authErrorStream {
+    return _getStreamByState((state) => state.authError);
+  }
 
   @override
   Stream<bool> get isLoadingStream {
@@ -77,12 +79,17 @@ class StreamLoginPresenter implements LoginPresenter {
   @override
   Future<void> auth() async {
     _update(() => _state.isLoading = true);
-    await authentication.auth(
-      AuthenticationParams(
-        email: _state.email,
-        secret: _state.password,
-      ),
-    );
+    try {
+      await authentication.auth(
+        AuthenticationParams(
+          email: _state.email,
+          secret: _state.password,
+        ),
+      );
+    } on DomainError catch (error) {
+      _update(() => _state.authError = error.description);
+    }
+
     _update(() => _state.isLoading = false);
   }
 

@@ -3,7 +3,7 @@ abstract class LoginPresenter {
 
   Stream<String?> get passwordErrorStream;
 
-  Stream<String?> get loginErrorStream;
+  Stream<String?> get authErrorStream;
 
   Stream<bool> get isFormValidStream;
 

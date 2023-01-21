@@ -32,26 +32,31 @@ class MockLoginPresenter extends _i1.Mock implements _i2.LoginPresenter {
         Invocation.getter(#emailErrorStream),
         returnValue: _i3.Stream<String?>.empty(),
       ) as _i3.Stream<String?>);
+
   @override
   _i3.Stream<String?> get passwordErrorStream => (super.noSuchMethod(
         Invocation.getter(#passwordErrorStream),
         returnValue: _i3.Stream<String?>.empty(),
       ) as _i3.Stream<String?>);
+
   @override
-  _i3.Stream<String?> get loginErrorStream => (super.noSuchMethod(
+  _i3.Stream<String?> get authErrorStream => (super.noSuchMethod(
         Invocation.getter(#loginErrorStream),
         returnValue: _i3.Stream<String?>.empty(),
       ) as _i3.Stream<String?>);
+
   @override
   _i3.Stream<bool> get isFormValidStream => (super.noSuchMethod(
         Invocation.getter(#isFormValidStream),
         returnValue: _i3.Stream<bool>.empty(),
       ) as _i3.Stream<bool>);
+
   @override
   _i3.Stream<bool> get isLoadingStream => (super.noSuchMethod(
         Invocation.getter(#isLoadingStream),
         returnValue: _i3.Stream<bool>.empty(),
       ) as _i3.Stream<bool>);
+
   @override
   void validateEmail(String? email) => super.noSuchMethod(
         Invocation.method(
@@ -60,6 +65,7 @@ class MockLoginPresenter extends _i1.Mock implements _i2.LoginPresenter {
         ),
         returnValueForMissingStub: null,
       );
+
   @override
   void validatePassword(String? password) => super.noSuchMethod(
         Invocation.method(
@@ -68,6 +74,7 @@ class MockLoginPresenter extends _i1.Mock implements _i2.LoginPresenter {
         ),
         returnValueForMissingStub: null,
       );
+
   @override
   _i3.Future<void> auth() => (super.noSuchMethod(
         Invocation.method(
@@ -77,6 +84,7 @@ class MockLoginPresenter extends _i1.Mock implements _i2.LoginPresenter {
         returnValue: _i3.Future<void>.value(),
         returnValueForMissingStub: _i3.Future<void>.value(),
       ) as _i3.Future<void>);
+
   @override
   void dispose() => super.noSuchMethod(
         Invocation.method(

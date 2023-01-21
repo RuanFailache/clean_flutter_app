@@ -51,7 +51,7 @@ class BlocLoginPresenter implements LoginPresenter {
 
   @override
   // TODO: implement loginErrorStream
-  Stream<String> get loginErrorStream => throw UnimplementedError();
+  Stream<String> get authErrorStream => throw UnimplementedError();
 
   @override
   void dispose() {

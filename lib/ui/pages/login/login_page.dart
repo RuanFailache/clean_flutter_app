@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
             }
           });
 
-          widget.presenter.loginErrorStream.listen((error) {
+          widget.presenter.authErrorStream.listen((error) {
             if (error != null && error.isNotEmpty) {
               ErrorSnackBar.show(context, error);
             }
