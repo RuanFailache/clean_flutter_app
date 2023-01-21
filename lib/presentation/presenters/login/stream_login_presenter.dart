@@ -16,13 +16,15 @@ class StreamLoginPresenter implements LoginPresenter {
     required this.authentication,
   });
 
-  final LoginState _state = LoginState();
+  final _state = LoginState();
 
   final _controller = StreamController<LoginState>.broadcast();
 
   void _update(Function callback) {
-    callback();
-    _controller.add(_state);
+    if (!_controller.isClosed) {
+      callback();
+      _controller.add(_state);
+    }
   }
 
   Stream<State> _getStreamByState<State>(State Function(LoginState) state) {
@@ -94,7 +96,5 @@ class StreamLoginPresenter implements LoginPresenter {
   }
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-  }
+  void dispose() => _controller.close();
 }
