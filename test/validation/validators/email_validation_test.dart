@@ -1,20 +1,7 @@
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:for_dev/validation/protocols/protocols.dart';
 
-class EmailValidation extends FieldValidation {
-  @override
-  final String field;
-
-  EmailValidation(this.field);
-
-  @override
-  String? validate(String value) {
-    final regex = RegExp(r'^/w+@/w+./w+$');
-    final isValid = value.isEmpty ? null : regex.hasMatch(value);
-    return isValid == true ? null : 'Email inválido';
-  }
-}
+import 'package:for_dev/validation/validators/validators.dart';
 
 void main() {
   late EmailValidation sut;
