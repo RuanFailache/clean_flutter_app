@@ -1,22 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-abstract class FieldValidation {
-  String get field;
-
-  String? validate(String value);
-}
-
-class RequiredFieldValidation extends FieldValidation {
-  @override
-  final String field;
-
-  RequiredFieldValidation(this.field);
-
-  @override
-  String? validate(String value) {
-    return value.isEmpty ? 'Campo obrigatório' : null;
-  }
-}
+import 'package:for_dev/validation/validators/validators.dart';
 
 void main() {
   late RequiredFieldValidation sut;
