@@ -10,7 +10,9 @@ class EmailValidation extends FieldValidation {
 
   @override
   String? validate(String value) {
-    return null;
+    final regex = RegExp(r'^/w+@/w+./w+$');
+    final isValid = value.isEmpty ? null : regex.hasMatch(value);
+    return isValid == true ? null : 'Email inválido';
   }
 }
 
@@ -38,6 +40,15 @@ void main() {
       final error = sut.validate(email);
 
       expect(error, null);
+    },
+  );
+
+  test(
+    'Should return error if email is invalid',
+    () async {
+      final error = sut.validate('invalid_email');
+
+      expect(error, 'Email inválido');
     },
   );
 }
