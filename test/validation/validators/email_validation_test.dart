@@ -14,11 +14,15 @@ class EmailValidation extends FieldValidation {
 }
 
 void main() {
+  late EmailValidation sut;
+
+  setUp(() {
+    sut = EmailValidation('');
+  });
+
   test(
     'Should return null if email is empty',
     () async {
-      final sut = EmailValidation('');
-
       final error = sut.validate('');
 
       expect(error, null);
