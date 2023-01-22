@@ -16,12 +16,15 @@ class ValidationComposite implements Validation {
     required String field,
     required String value,
   }) {
+    final validations = this.validations.where((v) => v.field == field);
+
     for (final validation in validations) {
       final error = validation.validate(value);
       if (error?.isEmpty != true) {
         return error;
       }
     }
+
     return null;
   }
 }
@@ -114,6 +117,21 @@ void main() {
       );
 
       expect(error, 'error 1');
+    },
+  );
+
+  test(
+    'Should return the error of the correct field',
+    () {
+      mockFieldValidation1(field: 'field 1', error: 'error 1');
+      mockFieldValidation2(field: 'field 2', error: 'error 2');
+
+      final error = sut.validate(
+        field: 'field 2',
+        value: 'any_value',
+      );
+
+      expect(error, 'error 2');
     },
   );
 }
