@@ -101,4 +101,19 @@ void main() {
       expect(error, 'error');
     },
   );
+
+  test(
+    'Should return the first error',
+    () {
+      mockFieldValidation1(error: 'error 1');
+      mockFieldValidation2(error: 'error 2');
+
+      final error = sut.validate(
+        field: 'any_field',
+        value: 'any_value',
+      );
+
+      expect(error, 'error 1');
+    },
+  );
 }
