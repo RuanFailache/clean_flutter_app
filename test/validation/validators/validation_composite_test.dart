@@ -16,6 +16,12 @@ class ValidationComposite implements Validation {
     required String field,
     required String value,
   }) {
+    for (final validation in validations) {
+      final error = validation.validate(value);
+      if (error?.isEmpty != true) {
+        return error;
+      }
+    }
     return null;
   }
 }
@@ -78,6 +84,21 @@ void main() {
       );
 
       expect(error, null);
+    },
+  );
+
+  test(
+    'Should return error if at least one field has an error',
+    () {
+      mockFieldValidation1(error: '');
+      mockFieldValidation2(error: 'error');
+
+      final error = sut.validate(
+        field: 'any_field',
+        value: 'any_value',
+      );
+
+      expect(error, 'error');
     },
   );
 }
