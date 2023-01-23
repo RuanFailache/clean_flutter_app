@@ -19,6 +19,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  void _hideKeyboard() {
+    final currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -51,50 +58,54 @@ class _LoginPageState extends State<LoginPage> {
             ErrorSnackBar.show(context, error);
           });
 
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: pageMaxHeight),
-              child: Column(
-                children: [
-                  const LoginPageHeader(),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Provider(
-                        create: (_) => widget.presenter,
-                        child: Form(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Login'.toUpperCase(),
-                                style: Theme.of(context).textTheme.headline1,
-                              ),
-                              const SizedBox(height: 32),
-                              const EmailInput(),
-                              const SizedBox(height: 16),
-                              const PasswordInput(),
-                              const SizedBox(height: 24),
-                              const LoginButton(),
-                              const SizedBox(height: 16),
-                              TextButton(
-                                onPressed: () {},
-                                child: Wrap(
-                                  spacing: 8,
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  children: const [
-                                    Icon(Icons.person),
-                                    Text('Criar conta'),
-                                  ],
+          return GestureDetector(
+            onTap: _hideKeyboard,
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: pageMaxHeight),
+                child: Column(
+                  children: [
+                    const LoginPageHeader(),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Provider(
+                          create: (_) => widget.presenter,
+                          child: Form(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Login'.toUpperCase(),
+                                  style: Theme.of(context).textTheme.headline1,
                                 ),
-                              ),
-                            ],
+                                const SizedBox(height: 32),
+                                const EmailInput(),
+                                const SizedBox(height: 16),
+                                const PasswordInput(),
+                                const SizedBox(height: 24),
+                                const LoginButton(),
+                                const SizedBox(height: 16),
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Wrap(
+                                    spacing: 8,
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.center,
+                                    children: const [
+                                      Icon(Icons.person),
+                                      Text('Criar conta'),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );
