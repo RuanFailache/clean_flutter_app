@@ -16,9 +16,10 @@ class ValidationComposite implements Validation {
 
     for (final validation in validations) {
       final error = validation.validate(value);
-      if (error?.isEmpty != true) {
-        return error;
+      if (error == null || error.isEmpty) {
+        continue;
       }
+      return error;
     }
 
     return null;

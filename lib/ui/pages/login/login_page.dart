@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:for_dev/ui/components/components.dart';
-import 'package:for_dev/ui/components/error_snack_bar.dart';
-import 'package:for_dev/ui/pages/login/login_presenter.dart';
-import 'package:for_dev/ui/pages/login/widgets/email_input.dart';
-import 'package:for_dev/ui/pages/login/widgets/login_button.dart';
-import 'package:for_dev/ui/pages/login/widgets/password_input.dart';
-import 'package:for_dev/ui/pages/login/widgets/widgets.dart';
 import 'package:provider/provider.dart';
+
+import 'package:for_dev/ui/components/components.dart';
+
+import 'widgets/widgets.dart';
+import 'login_presenter.dart';
 
 class LoginPage extends StatefulWidget {
   final LoginPresenter presenter;
@@ -47,9 +45,10 @@ class _LoginPageState extends State<LoginPage> {
           });
 
           widget.presenter.authErrorStream.listen((error) {
-            if (error != null && error.isNotEmpty) {
-              ErrorSnackBar.show(context, error);
+            if (error == null || error.isEmpty) {
+              return;
             }
+            ErrorSnackBar.show(context, error);
           });
 
           return SingleChildScrollView(

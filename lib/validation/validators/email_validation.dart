@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import '../protocols/protocols.dart';
 
 class EmailValidation extends FieldValidation {
@@ -8,8 +10,9 @@ class EmailValidation extends FieldValidation {
 
   @override
   String? validate(String value) {
-    final regex = RegExp(r'^/w+@/w+./w+$');
-    final isValid = value.isEmpty ? null : regex.hasMatch(value);
-    return isValid == true ? null : 'Email inválido';
+    debugPrint('teste');
+    final regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    final isValid = value.isEmpty ? true : regex.hasMatch(value);
+    return isValid ? null : 'Email inválido';
   }
 }

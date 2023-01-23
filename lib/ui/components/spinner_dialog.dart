@@ -7,6 +7,7 @@ class SpinnerDialog extends StatelessWidget {
     showDialog(
       context: context,
       barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(.25),
       builder: (context) => const SpinnerDialog(),
     );
   }
@@ -20,9 +21,11 @@ class SpinnerDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SimpleDialog(
-      children: [
-        Column(
+    return Dialog(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
             CircularProgressIndicator(),
@@ -30,7 +33,7 @@ class SpinnerDialog extends StatelessWidget {
             Text('Aguarde...', textAlign: TextAlign.center),
           ],
         ),
-      ],
+      ),
     );
   }
 }
