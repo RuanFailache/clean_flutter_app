@@ -7,60 +7,46 @@ import 'package:for_dev/ui/pages/login/login.dart';
 import '../../dependencies/dependencies.dart';
 import 'login_state.dart';
 
-class StreamLoginPresenter implements LoginPresenter {
+class StreamLoginPresenter extends StreamPresenter<LoginState>
+    implements LoginPresenter {
   final Validation validation;
   final Authentication authentication;
 
   StreamLoginPresenter({
     required this.validation,
     required this.authentication,
-  });
-
-  final _state = LoginState();
-
-  final _controller = StreamController<LoginState>.broadcast();
-
-  void _update(Function callback) {
-    if (!_controller.isClosed) {
-      callback();
-      _controller.add(_state);
-    }
-  }
-
-  Stream<State> _getStreamByState<State>(State Function(LoginState) state) {
-    return _controller.stream.map(state).distinct();
-  }
+  }) : super(LoginState.initialState);
 
   @override
   Stream<String?> get emailErrorStream {
-    return _getStreamByState((state) => state.emailError);
+    return getStream((state) => state.emailError);
   }
 
   @override
   Stream<String?> get passwordErrorStream {
-    return _getStreamByState((state) => state.passwordError);
+    return getStream((state) => state.passwordError);
   }
 
   @override
   Stream<String?> get authErrorStream {
-    return _getStreamByState((state) => state.authError);
+    return getStream((state) => state.authError);
   }
 
   @override
   Stream<bool> get isLoadingStream {
-    return _getStreamByState((state) => state.isLoading);
+    return getStream((state) => state.isLoading);
   }
 
   @override
   Stream<bool> get isFormValidStream {
-    return _getStreamByState((state) => state.isFormValid);
+    return getStream((state) => state.isFormValid);
   }
 
   @override
   void validateEmail(String email) {
-    _update(() {
-      _state.email = email;
-      _state.emailError = validation.validate(
+    update(() {
+      state.email = email;
+      state.emailError = validation.validate(
         field: 'email',
         value: email,
       );
@@ -69,9 +55,9 @@ class StreamLoginPresenter implements LoginPresenter {
 
   @override
   void validatePassword(String password) {
-    _update(() {
-      _state.password = password;
-      _state.passwordError = validation.validate(
+    update(() {
+      state.password = password;
+      state.passwordError = validation.validate(
         field: 'password',
         value: password,
       );
@@ -80,21 +66,21 @@ class StreamLoginPresenter implements LoginPresenter {
 
   @override
   Future<void> auth() async {
-    _update(() => _state.isLoading = true);
+    update(() => state.isLoading = true);
     try {
       await authentication.auth(
         AuthenticationParams(
-          email: _state.email,
-          secret: _state.password,
+          email: state.email,
+          secret: state.password,
         ),
       );
     } on DomainError catch (error) {
-      _update(() => _state.authError = error.description);
+      update(() => state.authError = error.description);
     }
 
-    _update(() => _state.isLoading = false);
+    update(() => state.isLoading = false);
   }
 
   @override
-  void dispose() => _controller.close();
+  void dispose() => controller.close();
 }

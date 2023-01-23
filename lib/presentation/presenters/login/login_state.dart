@@ -1,4 +1,6 @@
 class LoginState {
+  static get initialState => LoginState();
+
   String email = '';
 
   String password = '';
@@ -13,7 +15,7 @@ class LoginState {
 
   bool get isFormValid =>
       emailError == null &&
-          email.isNotEmpty &&
-          passwordError == null &&
-          password.isNotEmpty;
+      email.isNotEmpty &&
+      passwordError == null &&
+      password.isNotEmpty;
 }
