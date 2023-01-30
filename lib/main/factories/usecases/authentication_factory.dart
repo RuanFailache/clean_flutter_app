@@ -1,5 +1,5 @@
 import 'package:for_dev/domain/usecases/authentication.dart';
-import 'package:for_dev/data/usecases/remote_authentication.dart';
+import 'package:for_dev/data/usecases/usecases.dart';
 
 import '../factories.dart';
 
