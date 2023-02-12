@@ -1,4 +1,4 @@
-import 'package:for_dev/data/http/http.dart';
+import 'package:for_dev/data/datasources/http/http.dart';
 import 'package:for_dev/domain/entities/account_entity.dart';
 
 class RemoteAccountModel {
