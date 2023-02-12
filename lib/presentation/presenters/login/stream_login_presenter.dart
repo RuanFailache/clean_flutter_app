@@ -1,20 +1,23 @@
 import 'dart:async';
 
-import 'package:for_dev/domain/helpers/domain_error.dart';
-import 'package:for_dev/domain/usecases/authentication.dart';
-import 'package:for_dev/ui/pages/login/login.dart';
+import '../../../domain/helpers/domain_error.dart';
+import '../../../domain/usecases/usecases.dart';
+import '../../../ui/pages/login/login.dart';
 
 import '../../dependencies/dependencies.dart';
+
 import 'login_state.dart';
 
 class StreamLoginPresenter extends StreamPresenter<LoginState>
     implements LoginPresenter {
   final Validation validation;
   final Authentication authentication;
+  final SaveCurrentAccount saveCurrentAccount;
 
   StreamLoginPresenter({
     required this.validation,
     required this.authentication,
+    required this.saveCurrentAccount,
   }) : super(LoginState.initialState);
 
   @override
@@ -68,17 +71,19 @@ class StreamLoginPresenter extends StreamPresenter<LoginState>
   Future<void> auth() async {
     update(() => state.isLoading = true);
     try {
-      await authentication.auth(
+      final account = await authentication.auth(
         AuthenticationParams(
           email: state.email,
           secret: state.password,
         ),
       );
+      await saveCurrentAccount.save(account);
     } on DomainError catch (error) {
-      update(() => state.authError = error.description);
+      update(() {
+        state.authError = error.description;
+        state.isLoading = false;
+      });
     }
-
-    update(() => state.isLoading = false);
   }
 
   @override
