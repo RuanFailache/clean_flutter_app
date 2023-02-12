@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:for_dev/data/datasources/datasources.dart';
+import 'package:for_dev/infra/cache/cache.dart';
 
 import 'local_storage_adapter_test.mocks.dart';
 
@@ -46,18 +46,4 @@ void main() {
       expect(future, throwsA(const TypeMatcher<Exception>()));
     },
   );
-}
-
-class LocalStorageAdapter implements SaveSecureCacheStorage {
-  final FlutterSecureStorage secureStorage;
-
-  const LocalStorageAdapter({required this.secureStorage});
-
-  @override
-  Future<void> saveSecure({
-    required String key,
-    required String value,
-  }) async {
-    await secureStorage.write(key: key, value: value);
-  }
 }
