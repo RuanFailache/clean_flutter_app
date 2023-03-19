@@ -45,7 +45,7 @@ void main() {
     when(presenter.passwordErrorStream).thenAnswer(
       (realInvocation) => passwordErrorController.stream,
     );
-    when(presenter.authErrorStream).thenAnswer(
+    when(presenter.formErrorStream).thenAnswer(
       (realInvocation) => loginErrorController.stream,
     );
     when(presenter.isFormValidStream).thenAnswer(

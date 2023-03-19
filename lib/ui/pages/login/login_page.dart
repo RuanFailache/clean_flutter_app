@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
             }
           });
 
-          widget.presenter.authErrorStream.listen((error) {
+          widget.presenter.formErrorStream.listen((error) {
             if (error == null || error.isEmpty) {
               return;
             }

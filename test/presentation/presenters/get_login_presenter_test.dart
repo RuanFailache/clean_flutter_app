@@ -10,11 +10,11 @@ import 'package:for_dev/domain/usecases/usecases.dart';
 import 'package:for_dev/presentation/dependencies/dependencies.dart';
 import 'package:for_dev/presentation/presenters/presenters.dart';
 
-import 'stream_login_presenter_test.mocks.dart';
+import 'get_login_presenter_test.mocks.dart';
 
 @GenerateMocks([Validation, Authentication, SaveCurrentAccount])
 void main() {
-  late StreamLoginPresenter sut;
+  late GetLoginPresenter sut;
 
   late MockValidation validation;
   late MockAuthentication authentication;
@@ -33,6 +33,10 @@ void main() {
     return when(authentication.auth(any));
   }
 
+  PostExpectation mockSaveCurrentAccountCall() {
+    return when(saveCurrentAccount.save(any));
+  }
+
   void mockValidation({
     String? field,
     String? value,
@@ -46,8 +50,18 @@ void main() {
     );
   }
 
+  void mockSaveCurrentAccount() {
+    mockSaveCurrentAccountCall().thenAnswer(
+      (_) async {},
+    );
+  }
+
   void mockAuthenticationError(DomainError error) {
     mockAuthenticationCall().thenThrow(error);
+  }
+
+  void mockSaveCurrentAccountError() {
+    mockSaveCurrentAccountCall().thenThrow(DomainError.unexpected);
   }
 
   setUp(() {
@@ -59,7 +73,7 @@ void main() {
     authentication = MockAuthentication();
     saveCurrentAccount = MockSaveCurrentAccount();
 
-    sut = StreamLoginPresenter(
+    sut = GetLoginPresenter(
       validation: validation,
       authentication: authentication,
       saveCurrentAccount: saveCurrentAccount,
@@ -67,6 +81,7 @@ void main() {
 
     mockValidation();
     mockAuthentication();
+    mockSaveCurrentAccount();
   });
 
   test(
@@ -227,6 +242,29 @@ void main() {
   );
 
   test(
+    'Should emit UnexpectedError if SaveCurrentAccount fails',
+    () async {
+      mockSaveCurrentAccountError();
+
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+
+      expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+
+      sut.formErrorStream.listen(
+        expectAsync1(
+          (error) => expect(
+            error,
+            DomainError.unexpected.description,
+          ),
+        ),
+      );
+
+      await sut.auth();
+    },
+  );
+
+  test(
     'Should call Authentication with correct values',
     () async {
       sut.validateEmail(email);
@@ -265,9 +303,9 @@ void main() {
       sut.validateEmail(email);
       sut.validatePassword(password);
 
-      expectLater(sut.isLoadingStream, emits(false));
+      expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
 
-      sut.authErrorStream.listen(
+      sut.formErrorStream.listen(
         expectAsync1(
           (error) => expect(
             error,
@@ -288,9 +326,9 @@ void main() {
       sut.validateEmail(email);
       sut.validatePassword(password);
 
-      expectLater(sut.isLoadingStream, emits(false));
+      expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
 
-      sut.authErrorStream.listen(
+      sut.formErrorStream.listen(
         expectAsync1(
           (error) => expect(
             error,

@@ -38,8 +38,8 @@ class MockLoginPresenter extends _i1.Mock implements _i2.LoginPresenter {
         returnValue: _i3.Stream<String?>.empty(),
       ) as _i3.Stream<String?>);
   @override
-  _i3.Stream<String?> get authErrorStream => (super.noSuchMethod(
-        Invocation.getter(#authErrorStream),
+  _i3.Stream<String?> get formErrorStream => (super.noSuchMethod(
+        Invocation.getter(#formErrorStream),
         returnValue: _i3.Stream<String?>.empty(),
       ) as _i3.Stream<String?>);
   @override
